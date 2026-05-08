@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tripling Gold Problem - By Ojas Goel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --gold: #d4a84f;
+      --light-gold: #f3d58d;
+      --deep-gold: #8f6a25;
+      --navy: #07111f;
+      --navy-2: #0d1c31;
+      --navy-3: #112743;
+      --cream: #f4e8cf;
+      --glass: rgba(255,255,255,0.05);
+      --border: rgba(212,168,79,0.25);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(212,168,79,0.12), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(212,168,79,0.08), transparent 25%),
+        linear-gradient(135deg, #02060d, #07111f, #0c1f36);
+      color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 18px 40px;
+      backdrop-filter: blur(18px);
+      background: rgba(4, 10, 18, 0.7);
+      border-bottom: 1px solid var(--border);
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Cinzel', serif;
+      color: var(--light-gold);
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links button {
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--cream);
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-size: 0.92rem;
+    }
+
+    .nav-links button:hover {
+      transform: translateY(-3px);
+      background: rgba(212,168,79,0.12);
+      box-shadow: 0 0 20px rgba(212,168,79,0.18);
+      border-color: rgba(212,168,79,0.5);
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 120px 8vw 70px;
+      display: none;
+      animation: fade 0.6s ease;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      color: var(--light-gold);
+      margin-bottom: 20px;
+      text-shadow: 0 0 25px rgba(212,168,79,0.3);
+    }
+
+    .hero p {
+      max-width: 800px;
+      color: rgba(255,255,255,0.8);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 55px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 28px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 38px 30px;
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      transition: 0.4s ease;
+      cursor: pointer;
+      min-height: 240px;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(212,168,79,0.2), transparent 40%);
+      opacity: 0;
+      transition: 0.4s;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border-color: rgba(212,168,79,0.5);
+    }
+
+    .card h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--light-gold);
+      margin-bottom: 18px;
+      font-size: 1.6rem;
+    }
+
+    .card p {
+      color: rgba(255,255,255,0.78);
+      line-height: 1.7;
+    }
+
+    .page-title {
+      font-family: 'Cinzel', serif;
+      color: var(--light-gold);
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 35px;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(212,168,79,0.2);
+    }
+
+    .glass-panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 40px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 50px rgba(0,0,0,0.35);
+    }
+
+    .problem-text,
+    .solution-text {
+      font-size: 1.05rem;
+      line-height: 2;
+      color: rgba(255,255,255,0.88);
+      white-space: pre-line;
+    }
+
+    .constraints {
+      margin-top: 35px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .constraint {
+      padding: 18px 22px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(212,168,79,0.18);
+    }
+
+    .question-box {
+      margin-top: 35px;
+      padding: 28px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(212,168,79,0.1), rgba(255,255,255,0.02));
+      border: 1px solid rgba(212,168,79,0.3);
+    }
+
+    .question-box h3 {
+      color: var(--light-gold);
+      margin-bottom: 15px;
+      font-family: 'Cinzel', serif;
+    }
+
+    .image-gallery {
+      display: grid;
+      gap: 45px;
+    }
+
+    .image-card {
+      padding: 22px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      transition: 0.4s ease;
+    }
+
+    .image-card:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 40px rgba(212,168,79,0.12);
+    }
+
+    .image-card img {
+      width: 100%;
+      border-radius: 20px;
+      display: block;
+    }
+
+    .formula-box {
+      text-align: center;
+      padding: 35px;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(212,168,79,0.28);
+      margin-bottom: 35px;
+    }
+
+    .formula-box h2 {
+      font-family: 'Cinzel', serif;
+      color: var(--light-gold);
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    .formula {
+      font-size: 1.5rem;
+      color: white;
+      line-height: 2;
+      overflow-x: auto;
+    }
+
+    .note {
+      margin-top: 18px;
+      color: rgba(255,255,255,0.7);
+      font-style: italic;
+    }
+
+    .simulator {
+      margin-top: 50px;
+      padding: 40px;
+      border-radius: 30px;
+      background: linear-gradient(145deg, rgba(212,168,79,0.08), rgba(255,255,255,0.02));
+      border: 1px solid rgba(212,168,79,0.28);
+      text-align: center;
+    }
+
+    .simulator h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--light-gold);
+      margin-bottom: 22px;
+      font-size: 2rem;
+    }
+
+    .simulator input {
+      width: min(350px, 100%);
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(212,168,79,0.3);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 22px;
+    }
+
+    .simulator button {
+      display: block;
+      margin: auto;
+      padding: 15px 34px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #d4a84f, #f0d28b);
+      color: #111;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .simulator button:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 25px rgba(212,168,79,0.45);
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 1.2rem;
+      color: var(--cream);
+      min-height: 50px;
+      line-height: 1.8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px;
+      color: rgba(255,255,255,0.6);
+      border-top: 1px solid rgba(212,168,79,0.15);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .nav-links {
+        justify-content: center;
+      }
+
+      .glass-panel {
+        padding: 25px;
+      }
+
+      .formula {
+        font-size: 1.05rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="logo">Tripling Gold Problem — By Ojas Goel</div>
+
+    <div class="nav-links">
+      <button onclick="showPage('home')">Home</button>
+      <button onclick="showPage('problem')">Problem</button>
+      <button onclick="showPage('solution')">Solution</button>
+      <button onclick="showPage('data')">Data</button>
+      <button onclick="showPage('function')">Function</button>
+    </div>
+  </div>
+
+  <section id="home" class="active">
+    <div class="hero">
+      <h1>Tripling Gold Problem</h1>
+
+      <p>
+        A sophisticated mathematical exploration revolving around a mysterious magical bag capable of transforming coins through hidden deterministic behavior.
+      </p>
+
+      <div class="grid">
+
+        <div class="card" onclick="showPage('problem')">
+          <h3>Problem Statement & Question</h3>
+          <p>
+            Explore the mysterious rules and constraints governing the magical transformation bag.
+          </p>
+        </div>
+
+        <div class="card" onclick="showPage('solution')">
+          <h3>Solution to Question 1</h3>
+          <p>
+            A detailed entry-based approach demonstrating how the transformation table is gradually constructed.
+          </p>
+        </div>
+
+        <div class="card" onclick="showPage('data')">
+          <h3>Input, Intermediate & Output Data</h3>
+          <p>
+            View all transformation tables containing input values, intermediate states, and final outputs.
+          </p>
+        </div>
+
+        <div class="card" onclick="showPage('function')">
+          <h3>Function (Advanced)</h3>
+          <p>
+            Discover the advanced function and experiment with the interactive Magic Bag Simulator.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="problem">
+
+    <h1 class="page-title">The Problem</h1>
+
+    <div class="glass-panel">
+
+      <div class="problem-text">
+There is a magic bag that increases the number of coins you put inside. If you put coins in, take them out, and then put that new amount back in a second time, you will end up with exactly triple your original starting amount.
+      </div>
+
+      <div class="constraints">
+
+        <div class="constraint">1. Coins always increase.</div>
+
+        <div class="constraint">
+          2. The bag function is constant. If you put x coins in and y coins come out, this will always remain the same. Whenever x coins are placed in the bag, y coins will come out.
+        </div>
+
+        <div class="constraint">
+          3. The more gold goes in, the more gold comes out.
+        </div>
+
+        <div class="constraint">
+          4. Coins always go in or come out in natural numbers. No fractions are involved.
+        </div>
+
+      </div>
+
+      <div class="question-box">
+        <h3>Question 1 (Beginner)</h3>
+        <p>
+          Determine the number of coins that will come out immediately if 13 coins are put in the bag.
+        </p>
+      </div>
+
+      <div class="question-box">
+        <h3>Question 2 (Advanced)</h3>
+        <p>
+          Generate a function f(x) that provides the coins that come out immediately after x coins go in.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section id="solution">
+
+    <h1 class="page-title">Solution to Question 1</h1>
+
+    <div class="glass-panel">
+
+      <div class="image-card" style="margin-bottom:40px;">
+        <img src="1000036667.png" alt="Solution Table Highlight">
+      </div>
+
+      <div class="solution-text">
+“For any confusion, refer to the YouTube video.
+
+Use the table provided on this page to ensure that your data is correct. Writing entries is a very helpful approach for such kinds of problems.
+
+So we begin by writing entries from the beginning. We will be able to create a table-like structure that contains three columns. The first column will be Input, the second column will be Intermediate, and the third column will be Output. The third column is obviously 3 times the input.
+
+Now we will start by writing our very first input, which is one coin.
+
+If one coin goes into the bag, let’s say y coins come out. If these y coins go into the bag again, 3 coins come out.
+
+We all know that this bag sets some kind of constraints. One of them is that a greater number of coins must always come out. Using this, we can clearly say that y must be greater than 1.
+
+Applying the same logic again, we can say that 3 must be greater than y.
+
+Now if we solve these two inequalities and apply the constraint that y must be a natural number, we get that y must be 2 and it cannot be anything else.
+
+Moving forward, we can now say that if 2 coins go into the bag, 3 coins must come out, as it was the result of our very first entry.
+
+So now we have a set of entries.
+
+First entry:
+If 1 coin goes in, 2 coins come out.
+If those 2 coins go in again, 3 coins come out.
+
+Second entry:
+If 2 coins go in, 3 coins come out.
+If those 3 coins go in, 6 coins come out.
+
+Now for the third entry, we can clearly say that if 3 coins go in, 6 coins come out, and if those 6 coins go in, 9 coins come out.
+
+If we try to repeat this process, we will hit a dead end at Entry 4. That is because 4 has never appeared in any previous entries.
+
+We know what will come out if 2, 3, or 6 coins go in, but we do not know about 4.
+
+So now we are going to use a very clever trick.
+
+We will leave 4 and 5 aside and jump directly to the 6th entry.
+
+Then we write:
+If 6 goes in, 9 comes out.
+If 9 goes in, 18 comes out.
+
+This might sound unusual and surprising, but now with this 6th entry we can definitely say what will come out if 4 or 5 goes in.
+
+Seems surprising, doesn’t it?
+
+Now we will use the third point, which stated that if more gold goes in, more gold comes out.
+
+Look at the table provided on this page and notice:
+When we placed 3 coins into the bag, 6 coins came out.
+When we placed 6 coins into the bag, 9 coins came out.
+
+Let us assume:
+If 4 coins go in, A coins come out.
+If 5 coins go in, B coins come out.
+
+Now we obtain a set of interesting inequalities.
+
+The first inequality states that A must be greater than 6.
+The second inequality states that B must be greater than A.
+The final inequality states that 9 must be greater than B.
+
+Using the information that A and B must be natural numbers, we can clearly say that A is 7 and B is 8.
+
+If you repeat this process again and again until you reach Entry 15, you will clearly have the answer to what amount of coins will come out if 13 coins go in.
+
+That answer is 22.
+
+I would strongly suggest watching the YouTube video to understand this even better.
+
+The table provided on this page is extremely helpful.”
+      </div>
+
+    </div>
+
+  </section>
+
+  <section id="data">
+
+    <h1 class="page-title">Input, Intermediate & Output Data</h1>
+
+    <div class="image-gallery">
+
+      <div class="image-card">
+        <img src="1000036671.png" alt="Transformation Table 1">
+      </div>
+
+      <div class="image-card">
+        <img src="1000036672.png" alt="Transformation Table 2">
+      </div>
+
+      <div class="image-card">
+        <img src="1000036673.png" alt="Transformation Table 3">
+      </div>
+
+    </div>
+
+  </section>
+
+  <section id="function">
+
+    <h1 class="page-title">Function (Advanced)</h1>
+
+    <div class="glass-panel">
+
+      <div class="formula-box">
+        <h2>Advanced Function</h2>
+
+        <div class="formula">
+          f(x) = 2x − |x − 3<sup>1 + [log<sub>3</sub>(x/2)]</sup>|
+        </div>
+
+        <div class="formula" style="margin-top:18px;">
+          f(f(x)) = 3x
+        </div>
+
+        <div class="note">
+          (For full derivation refer to the YouTube video.)
+        </div>
+      </div>
+
+      <div class="simulator">
+
+        <h3>Magic Bag Simulator</h3>
+
+        <input type="number" id="inputCoins" placeholder="Enter a natural number">
+
+        <button onclick="runBag()">Transform Coins</button>
+
+        <div class="result" id="result"></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <footer>
+    Crafted for mathematical exploration • Tripling Gold Problem • By Ojas Goel
+  </footer>
+
+  <script>
+
+    function showPage(pageId) {
+      const pages = document.querySelectorAll('section');
+
+      pages.forEach(page => {
+        page.classList.remove('active');
+      });
+
+      document.getElementById(pageId).classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function magicFunction(x) {
+      const power = 1 + Math.floor(Math.log(x / 2) / Math.log(3));
+      const value = Math.pow(3, power);
+      return 2 * x - Math.abs(x - value);
+    }
+
+    function runBag() {
+
+      const input = parseInt(document.getElementById('inputCoins').value);
+      const result = document.getElementById('result');
+
+      if (isNaN(input) || input <= 0) {
+        result.innerHTML = 'Please enter a valid natural number.';
+        return;
+      }
+
+      result.innerHTML = 'Processing magical transformation...';
+
+      setTimeout(() => {
+
+        const output = magicFunction(input);
+
+        result.innerHTML = `
+          Coins inserted: <strong>${input}</strong><br><br>
+          Magical transformation complete.<br><br>
+          Output: <strong>${output}</strong> coins
+        `;
+
+      }, 1200);
+
+    }
+
+  </script>
+
+</body>
+</html>
